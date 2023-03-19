@@ -303,3 +303,8 @@ cat hosts.txt | httpx -path /login -p 80,443,8080,8443 -mc 401,403 -silent -t 30
 ```bash
 echo tesla.com | subfinder -silent | httpx -silent | cariddi -intensive
 ```
+
+# I found an authorization bypass using the following command:
+```bash
+echo zain.com | waybackurls |grep -i "/admin/|/administrator/" | httpx -title -sc -lc -nc -silent | sed 's/[][]//g' |awk '$NF > 10000' |egrep ' 200| 301| 302' | cut -d ' ' -f1
+```
